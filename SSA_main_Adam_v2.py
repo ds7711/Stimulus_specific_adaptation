@@ -94,6 +94,15 @@ dxeee/dt = - xeee / tau_ei: 1
 dxiii/dt = xeee / tau_ei - xiii / tau_ir: 1
 x_temp1: 1
 '''
+
+eqs_AAA = '''
+dv_AAA/dt = (1.0 / CCC) * (III_AAA(t, i)): volt
+dxrrr/dt =  xiii / tau_ir: 1
+dxeee/dt = - xeee / tau_ei: 1
+dxiii/dt = xeee / tau_ei - xiii / tau_ir: 1
+x_temp1: 1
+'''
+
 # Neuron_AAA = NeuronGroup(Num_Poisson, 'rates: Hz', threshold = 'rand() < Temp_FR * dt')
 Neuron_AAA = NeuronGroup(Num_Poisson, 
                          eqs_AAA, 
@@ -105,7 +114,7 @@ Neuron_AAA.xeee = 0.35
 Neuron_AAA.xrrr = 0.3
 Neuron_AAA.xiii = 0.35                         
 Neuron_AAA.v_AAA = resting_AAA
-PoissonInput_monitor = SpikeMonitor(Neuron_AAA, record = 0)
+PoissonInput_monitor = SpikeMonitor(Neuron_AAA, record = True)
 Monitor_AAA = StateMonitor(Neuron_AAA, ['v_AAA', 'xeee'], record = True)
 
 
@@ -173,14 +182,14 @@ show()
 
 run(simulation_dur)
 
-#figure
-#plot(PoissonInput_monitor.t/ms, PoissonInput_monitor.i, '.k')
-#title('Poisson input visualization')
-#xlabel('Time (ms)')
-#ylabel('Neuron index')
-#xlim([0, 100 + simulation_dur / ms])
-#ylim([-1, Num_Poisson])
-#show()
+figure
+plot(PoissonInput_monitor.t/ms, PoissonInput_monitor.i, '.k')
+title('Poisson input visualization')
+xlabel('Time (ms)')
+ylabel('Neuron index')
+xlim([0, 100 + simulation_dur / ms])
+ylim([-1, Num_Poisson])
+show()
 
 figure
 plot(Monitor_AAA.t / ms, squeeze(Monitor_AAA.xeee[0, :]))
